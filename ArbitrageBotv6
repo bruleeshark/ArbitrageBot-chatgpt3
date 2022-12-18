@@ -1,0 +1,58 @@
+pragma solidity ^0.6.0;
+
+import "https://docs.aave.com/contracts/latest/flashloans/IFlashLoanReceiver.sol";
+import "https://docs.aave.com/contracts/latest/flashloans/FlashLoan.sol";
+
+// address of WBTC ERC20 token
+address private constant WBTC_ADDRESS = 0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6;
+// address of WMATIC ERC20 token
+address private constant WMATIC_ADDRESS = 0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270;
+
+// address of AAVE v3 flash loan contract
+FlashLoan private aaveFlashLoan;
+
+// address of uniswap v3 exchange contract
+address private uniswapExchange;
+
+// address of paraswap exchange contract
+address private paraswapExchange;
+
+// address of the owner of this contract
+address private owner;
+
+constructor(
+  address _aaveFlashLoan,
+  address _uniswapExchange,
+  address _paraswapExchange,
+  address _owner
+) public {
+  aaveFlashLoan = FlashLoan(_aaveFlashLoan);
+  uniswapExchange = _uniswapExchange;
+  paraswapExchange = _paraswapExchange;
+  owner = _owner;
+}
+
+// function to attempt to flash loan either WBTC or WMATIC from AAVE v3
+function flashLoan(bool _borrowWBTC) private view returns (bool) {
+  // calculate the amount of WBTC or WMATIC to borrow based on the input argument
+  uint256 amount;
+  address tokenAddress;
+  if (_borrowWBTC) {
+    amount = 1 ether; // borrow 1 WBTC
+    tokenAddress = WBTC_ADDRESS;
+  } else {
+    amount = 100 ether; // borrow 100 WMATIC
+    tokenAddress = WMATIC_ADDRESS;
+  }
+
+  // call the AAVE flash loan contract to borrow the specified amount of WBTC or WMATIC
+  (bool success,) = aaveFlashLoan.borrow(amount, tokenAddress, address(this));
+
+  return success;
+}
+
+// function to attempt to arbitrage WMATIC/WBTC between uniswap v3 and paraswap
+function arbitrage(bool _useUniswap) private view returns (bool) {
+  // calculate the amount of WMATIC or WBTC to sell and buy based on the input argument
+  uint256 sellAmount;
+  uint256 buyAmount;
