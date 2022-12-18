@@ -53,6 +53,4 @@ function flashLoan(bool _borrowWBTC) private view returns (bool) {
 
 // function to attempt to arbitrage WMATIC/WBTC between uniswap v3 and paraswap
 function arbitrage(bool _useUniswap) private view returns (bool) {
-  // calculate the amount of WMATIC or WBTC to sell and buy based on the input argument
-  uint256 sellAmount;
-  uint
+ 
