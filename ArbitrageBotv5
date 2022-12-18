@@ -1,0 +1,67 @@
+pragma solidity ^0.6.6;
+
+import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "https://github.com/Aave/aave-protocol/blob/v3/contracts/flashloans/IUniswapV3Pair.sol";
+import "https://github.com/Aave/aave-protocol/blob/v3/contracts/flashloans/IFlashLoan.sol";
+
+// Replace these with the actual contract addresses on Polygon Mainnet
+address private constant AAVE_V3_FLASH_LOAN_CONTRACT = 0x0000000000000000000000000000000000000000;
+address private constant UNISWAP_V3_WBTC_WMATIC_PAIR_CONTRACT = 0x0000000000000000000000000000000000000000;
+
+// Replace these with the actual token addresses on Polygon Mainnet
+address private constant WBTC_TOKEN_ADDRESS = 0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6;
+address private constant WMATIC_TOKEN_ADDRESS = 0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270;
+
+// Use SafeMath for unsigned integer math operations
+using SafeMath for uint256;
+
+// The flash loan contract interface
+interface IFlashLoan {
+  function flashLoan(
+    address token,
+    uint amount,
+    uint minExpectedRate,
+    uint minLoanSize,
+    address[] calldata paths
+  )
+    external
+    returns (uint[] memory amounts);
+}
+
+// The Uniswap V3 pair contract interface
+interface IUniswapV3Pair {
+  function getReserves()
+    external
+    view
+    returns (uint reserve0, uint reserve1);
+
+  function getReserveRatio(uint reserve0, uint reserve1)
+    external
+    view
+    returns (uint ratio);
+
+  function getAmountsOut(uint amountIn, uint reserve0, uint reserve1)
+    external
+    view
+    returns (uint amountOut, uint amountOut1);
+}
+
+contract Arbitrage {
+  // The owner of the contract
+  address private owner;
+
+  // The minimum profit required for an arbitrage trade to be considered successful
+  uint256 private minProfit;
+
+  constructor(uint256 _minProfit) public {
+    owner = msg.sender;
+    minProfit = _minProfit;
+  }
+
+  // Borrows a flash loan of `amount` of either WBTC or WMATIC from AAVE v3
+  function borrowFlashLoan(uint256 amount) private {
+    IFlashLoan flashLoanContract = IFlashLoan(AAVE_V3_FLASH_LOAN_CONTRACT);
+
+    // Try to borrow WBTC first, then fall back to WMATIC if that fails
+    flashLoanContract.flashLoan(WBTC_TOKEN_ADDRESS, amount, 0, 0, new address[](0));
+    flashLoanContract.flashLoan(WMATIC_TOKEN_ADDRESS, amount, 0, 0, new address[](0));
