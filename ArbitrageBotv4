@@ -1,0 +1,19 @@
+pragma solidity ^0.6.12;
+
+import "https://github.com/aave/aave-protocol/blob/main/contracts/protocol/v3/FlashLoan.sol";
+import "https://github.com/aave/aave-protocol/blob/main/contracts/protocol/v3/FlashLoanToken.sol";
+import "https://github.com/aave/aave-protocol/blob/main/contracts/protocol/v3/FlashLoanMarket.sol";
+import "https://github.com/Uniswap/uniswap-v3-periphery/blob/main/contracts/IUniswapV3Router02.sol";
+import "https://github.com/Uniswap/uniswap-v3-periphery/blob/main/contracts/IUniswapV3Router01.sol";
+import "https://github.com/Uniswap/uniswap-v3-periphery/blob/main/contracts/IUniswapV3Router03.sol";
+import "https://github.com/Uniswap/uniswap-v3-periphery/blob/main/contracts/IUniswapV3Router04.sol";
+import "https://github.com/Uniswap/uniswap-v3-periphery/blob/main/contracts/IUniswapV3Factory.sol";
+import "https://github.com/Uniswap/uniswap-v3-periphery/blob/main/contracts/IUniswapV3Exchange.sol";
+import "https://github.com/Uniswap/uniswap-v3-periphery/blob/main/contracts/IUniswapV3Migrator.sol";
+import "https://github.com/Uniswap/uniswap-v3-periphery/blob/main/contracts/IUniswapV3Library.sol";
+import "https://github.com/Uniswap/uniswap-v3-periphery/blob/main/contracts/IUniswapV3Oracle.sol";
+import "https://github.com/Uniswap/uniswap-v3-periphery/blob/main/contracts/IUniswapV3Pair.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-solidity/blob/main/contracts/math/SafeMath.sol";
+
+// WBTC and WMATIC token addresses
+const address WBTC_ADDRESS = 0x1bfd67037
