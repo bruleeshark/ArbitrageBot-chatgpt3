@@ -1,0 +1,29 @@
+pragma solidity ^0.6.12;
+
+import "https://github.com/aave/aave-v3-core/contracts/IFlashLoanSimpleReceiver.sol";
+import "https://github.com/aave/aave-v3-core/contracts/FlashLoanReceiverBase.sol";
+import "https://github.com/aave/aave-v3-core/contracts/types/FlashLoan.sol";
+
+// Replace these contract addresses with the actual addresses on Polygon Mainnet
+// You can find these addresses by visiting the Aave documentation or using a blockchain explorer
+address private constant AAVE_V3_CORE_CONTRACT_ADDRESS = 0xAAVE_V3_CORE_CONTRACT_ADDRESS;
+address private constant UNISWAP_V3_ROUTER_CONTRACT_ADDRESS = 0xUNISWAP_V3_ROUTER_CONTRACT_ADDRESS;
+address private constant PARASWAP_CONTRACT_ADDRESS = 0xPARASWAP_CONTRACT_ADDRESS;
+
+// Replace these contract ABIs with the actual ABIs for the contracts on Polygon Mainnet
+// You can find these ABIs by visiting the Aave documentation or using a blockchain explorer tool
+bytes32 constant internal AAVE_V3_CORE_CONTRACT_ABI = 0xAAVE_V3_CORE_CONTRACT_ABI;
+bytes32 constant internal UNISWAP_V3_ROUTER_CONTRACT_ABI = 0xUNISWAP_V3_ROUTER_CONTRACT_ABI;
+bytes32 constant internal PARASWAP_CONTRACT_ABI = 0xPARASWAP_CONTRACT_ABI;
+
+// Replace these token addresses with the actual addresses on Polygon Mainnet
+// You can find these addresses by visiting the Uniswap documentation or using a blockchain explorer
+address private constant WBTC_TOKEN_ADDRESS = 0xWBTC_TOKEN_ADDRESS;
+address private constant WMATIC_TOKEN_ADDRESS = 0xWMATIC_TOKEN_ADDRESS;
+
+// Replace these token decimals with the actual number of decimals for each token
+uint8 private constant WBTC_TOKEN_DECIMALS = 8;
+uint8 private constant WMATIC_TOKEN_DECIMALS = 18;
+
+// Replace these constants with the desired values
+uint private constant MIN_PROFIT = 1 * (10 ** WBTC_TOKEN_DECIMALS); // Minimum profit in WBTC
