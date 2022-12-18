@@ -1,0 +1,48 @@
+pragma solidity ^0.6.6;
+
+import "https://github.com/aave/aave-solidity-contracts/blob/v3/contracts/borrowing/FlashLoan.sol";
+import "https://github.com/Uniswap/uniswap-v3-periphery/blob/main/contracts/interfaces/IUniswapV3Router01.sol";
+import "https://github.com/Uniswap/uniswap-v3-periphery/blob/main/contracts/interfaces/IUniswapV3Pair.sol";
+import "https://github.com/Paraswap/paraswap-sdk/blob/master/contracts/interfaces/IDelegator.sol";
+
+// Address of the AAVE v3 Flash Loan contract
+address public flashLoanAddress = 0x0000000000000000000000000000000000000000;
+// Address of the Uniswap V3 Router
+address public uniswapV3RouterAddress = 0x0000000000000000000000000000000000000000;
+// Address of the WMATIC/WBTC Uniswap V3 Pair
+address public wmaticWbtcUniswapV3PairAddress = 0x0000000000000000000000000000000000000000;
+// Address of the Paraswap Delegator contract
+address public paraswapDelegatorAddress = 0x0000000000000000000000000000000000000000;
+
+// Address of the WBTC ERC20 token
+address public wbtcAddress = 0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6;
+// Address of the WMATIC ERC20 token
+address public wmaticAddress = 0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270;
+
+// Address of the contract owner
+address public owner;
+
+// Mapping to track the balance of ERC20 tokens within the contract
+mapping(address => uint256) public balances;
+
+constructor() public {
+    owner = msg.sender;
+}
+
+// Only the contract owner can call the following functions
+modifier onlyOwner() {
+    require(msg.sender == owner, "Only the contract owner can perform this action");
+    _;
+}
+
+// Deposit ERC20 tokens into the contract
+function deposit(address tokenAddress, uint256 amount) public payable {
+    require(tokenAddress.call(bytes4(keccak256("transfer(address,uint256)")), address(this), amount), "Transfer failed");
+    balances[tokenAddress] += amount;
+}
+
+// Withdraw ERC20 tokens from the contract
+function withdraw(address tokenAddress, uint256 amount) onlyOwner payable {
+    require(tokenAddress.call(bytes4(keccak256("transfer(address,uint256)")), address(this), amount), "Transfer failed");
+    balances[tokenAddress] -= amount;
+}
