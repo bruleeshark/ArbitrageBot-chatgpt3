@@ -44,3 +44,19 @@ function executeOperation(FlashLoan memory flashLoan)
         }
     }
     uint outputAmount = returnValues[2];
+
+        // Calculate the profit from the arbitrage swap
+    uint profit = outputAmount.sub(amount);
+
+    // Calculate the network gas fees and swap fees for the arbitrage swap
+    uint gasFees = (flashLoan.gasPrice.mul(flashLoan.gasLimit)).div(10 ** 18);
+    uint swapFees = (outputAmount.sub(amount)).sub(profit);
+
+    // Check whether the network gas fees and swap fees exceed the profit from the arbitrage swap
+    require(gasFees.add(swapFees) <= profit, "Profit from arbitrage swap is not sufficient to cover fees");
+
+    // Return the profits in the form of WBTC
+    WBTC_TOKEN_ADDRESS.transfer(profit);
+
+    return profit;
+}
